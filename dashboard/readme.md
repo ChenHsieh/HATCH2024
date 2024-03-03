@@ -5,6 +5,6 @@
 ## script to run the dashboard
 
 ```
-conda activate streamlit
+conda activate ~/opt/anaconda3/envs/streamlit
 streamlit run app.py
 ```
