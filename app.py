@@ -151,38 +151,53 @@ if st.button("Use example data"):
 if uploaded_file is not None:
 
     st.write(f"you are viewing SNPs from {uploaded_file}")
-    dataframe = pd.read_csv(uploaded_file, comment="#", sep="\t", header=None)
-    dataframe.columns = ["#CHROM", "position", "ID", "reference", "alternative", "QUAL", "FILTER", "INFO", "FORMAT", "SAMPLE"]
-    dataframe = dataframe[["position", "reference", "alternative"]]
-    st.write(dataframe)
 
-    st.subheader("Known pathogenic or disease-associated SNPs.")
-    Astr_SNPS_df = pd.read_csv("data/Astr_SNPS.csv")
-    Astr_SNPS_df.columns = ["position", "Most Severe clinical significance", "condition"]
-    st.write(Astr_SNPS_df)
+
+    try:
+        current_astro_snp_df = pd.read_csv(uploaded_file, comment="#", sep="\t", header=None)
+        current_astro_snp_df.columns = ["#CHROM", "position", "ID", "reference", "alternative", "QUAL", "FILTER", "INFO", "FORMAT", "SAMPLE"]
+        current_astro_snp_df = current_astro_snp_df[["position", "reference", "alternative"]]
+        st.write(current_astro_snp_df)
+
+        # Check if the DataFrame is empty
+        if current_astro_snp_df.empty:
+            st.warning("DataFrame is empty")
+            # Optionally, handle the empty DataFrame case here
+        
+        st.subheader("Known pathogenic or disease-associated SNPs (Mock)")
+        st.write("This would be a full list of known pathogenic or disease-associated SNPs for comparison. The following contains some mock data point for demonstration purpose.")
+        Astr_SNPS_df = pd.read_csv("data/Astr_SNPS.csv")
+        Astr_SNPS_df.columns = ["position", "Most Severe clinical significance", "condition"]
+        # remove rows with empty in column 'condition'
+        Astr_SNPS_df = Astr_SNPS_df.dropna(subset=['condition'])
+        st.write(Astr_SNPS_df)
+
+        st.subheader("Report")
+        st.write("The following is the result of the comparison between the astronaut's SNPs and known pathogenic or disease-associated SNPs. You might want to adjust the diet of the astronaut based on the result.")
+        # Merging DataFrames on 'position' with an inner join
+        result_df = pd.merge(current_astro_snp_df, Astr_SNPS_df, on='position', how='inner')
+        result_df
+    except pd.errors.EmptyDataError:
+        st.warning("DataFrame is empty")
+        
+    
 
 
 st.header('FuelFolio Finder')
 
-st.write("to find out the best food for your astronauts but also save the most fuel")
+st.write("To find out the best food for your astronauts but also save the most fuel")
 
-human_daily_nutrition_df = pd.read_csv("data/human_daily_nutrition.csv")
+st.subheader("Curated food nutrition database from FOODB")
+
+food_nutrition_df = pd.read_csv("data/real_final_foodb.csv", index_col=0)
+food_nutrition_df
+
+
 st.subheader("human daily nutrition")
+human_daily_nutrition_df = pd.read_csv("data/human_daily_nutrition.csv")
 st.dataframe(human_daily_nutrition_df)
-# mock nutrition and dehydration data
-df = pd.DataFrame({
-    "Nutritional Rank": np.random.randint(1, 100, 50), # Random ranks between 1 and 100
-    "Dehydrated Weight": np.random.uniform(5, 20, 50) # Random weights between 5 and 20 grams
-})
-df
 
 
-# Plot using Plotly
-fig = px.scatter(df, x="Nutritional Rank", y="Dehydrated Weight", title="Nutritional Rank vs Dehydrated Weight", 
-                 labels={"Nutritional Rank": "Nutritional Rank", "Dehydrated Weight": "Dehydrated Weight (grams)"},
-                 template="plotly_white")
-
-st.plotly_chart(fig, use_container_width=True)
 
 st.write("for seed weight please search here: https://ser-sid.org/")
 
