@@ -187,7 +187,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.write("for seed weight please search here: https://ser-sid.org/")
 
 # embed streamlit docs in a streamlit app
-components.iframe("https://ser-sid.org/", width=1024, height=640, scrolling=True)
+components.iframe("https://ser-sid.org/", width=960, height=640, scrolling=True)
 
 # footer
 st.divider()

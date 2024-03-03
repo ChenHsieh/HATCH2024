@@ -45,7 +45,6 @@ There are 3 main components to make use of the deliverables. The first is the Sn
 please replace the conda env as you see fit, we provided a sample conda env `data/envionments.yml` for you to use but it is not tested yet.
 
 ```bash
-cd dashboard
 conda activate ~/opt/anaconda3/envs/streamlit
 streamlit run app.py
 ```

@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+requests
+plotly
+Bio
+langchain_community
+time
